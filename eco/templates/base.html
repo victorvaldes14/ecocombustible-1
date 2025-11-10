@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EcoCombustión{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            eco: {
+              verde: '#047857', // tono verde principal
+              claro: '#10B981', // verde más claro
+              gris: '#374151',  // gris oscuro
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-emerald-700 text-white p-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <a href="/" class="font-bold text-xl">EcoCombustión</a>
+      <nav class="space-x-4">
+        <a href="/catalogo/" class="hover:underline">Catálogo</a>
+        <a href="/servicios/" class="hover:underline">Servicios</a>
+        <a href="/simulador/" class="hover:underline">Simulador</a>
+        <a href="/aire/" class="hover:underline">Calidad del aire</a>
+        <a href="/opiniones/" class="hover:underline">Opiniones</a>
+        <a href="/educacion/" class="hover:underline">Educación</a>
+        <a href="/panel/" class="hover:underline">Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t text-center text-sm text-slate-500 py-4">
+    © {{ now|default:2025 }} EcoCombustión — Comercio y educación sostenible.
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

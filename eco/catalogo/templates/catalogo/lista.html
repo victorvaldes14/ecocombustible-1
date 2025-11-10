@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Catálogo de productos{% endblock %}
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">Catálogo de productos</h1>
+
+{% if user.is_authenticated and user.proveedor %}
+  <button 
+    hx-get="{% url 'crear_producto' %}" 
+    hx-target="#modal-contenido"
+    hx-swap="innerHTML"
+    class="bg-emerald-600 text-white px-4 py-2 rounded">
+    + Agregar producto
+  </button>
+{% endif %}
+
+<div id="productos" class="grid md:grid-cols-3 gap-4 mt-4">
+  {% for producto in productos %}
+  <article class="bg-white rounded-2xl shadow p-4" id="producto-{{ producto.pk }}">
+    <h2 class="font-semibold">{{ producto.nombre }}</h2>
+    <p class="text-sm text-slate-500">{{ producto.get_tipo_display }}</p>
+    <p class="mt-2 font-bold">${{ producto.precio }}</p>
+    <p class="text-sm text-slate-400">Stock: {{ producto.stock }}</p>
+
+    {% if user == producto.proveedor.usuario %}
+    <div class="mt-3 flex gap-2">
+      <button 
+        hx-get="{% url 'editar_producto' producto.pk %}" 
+        hx-target="#modal-contenido"
+        hx-swap="innerHTML"
+        class="text-blue-600 underline">
+        Editar
+      </button>
+      <button 
+        hx-delete="{% url 'eliminar_producto' producto.pk %}" 
+        hx-target="#producto-{{ producto.pk }}"
+        hx-swap="outerHTML"
+        class="text-red-600 underline">
+        Eliminar
+      </button>
+    </div>
+    {% endif %}
+  </article>
+  {% empty %}
+  <p>No hay productos registrados.</p>
+  {% endfor %}
+</div>
+
+<div id="modal" class="fixed inset-0 hidden bg-black bg-opacity-40 items-center justify-center">
+  <div id="modal-contenido" class="bg-white rounded-2xl p-6 shadow-xl w-full max-w-lg"></div>
+</div>
+
+<script>
+  document.body.addEventListener('htmx:afterSwap', (e) => {
+    if (e.detail.target.id === 'modal-contenido') {
+      document.getElementById('modal').classList.remove('hidden');
+    }
+  });
+  document.body.addEventListener('click', (e) => {
+    if (e.target.id === 'modal') {
+      document.getElementById('modal').classList.add('hidden');
+    }
+  });
+</script>
+
+{% endblock %}
